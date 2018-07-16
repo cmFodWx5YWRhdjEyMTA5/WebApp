@@ -1,0 +1,140 @@
+<style>
+    .portlet.box.green
+    {
+        border: 0px solid !important;
+    }
+
+    .portlet.box.green > .portlet-title, .portlet.green, .portlet > .portlet-body.green
+    {
+        background-color : #4b666e !important;
+    }
+
+    .center
+    {
+        display : inherit;
+        margin-left: auto;
+        margin-right: auto;
+        object-fit: contain;
+    }
+</style>
+<%- include header %>
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="portlet box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class=""></i>TEAMMATES</div>
+                    <div class="tools">
+                        <a class="" href="/addTeammatesByAdmin" style="margin-top:-8px;" title="Add User">
+                            <button type="submit" class="btn btn-md white btn-outline margin-bottom-10 margin-right-10 ">
+                                Add Teammate
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <table class="table table-striped table-bordered table-hover" id="sample_2">
+                        <thead>
+                        <tr>
+                            <th class="text-center"> FirstName </th>
+                            <th class="text-center"> LastName </th>
+                            <th class="text-center"> Email </th>
+                            <th class="text-center"> Actions </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% result.forEach(function(user){ %>
+                        <tr>
+                            <td class="text-center"> <%= user.firstname%> </td>
+                            <td class="text-center"> <%= user.lastname%> </td>
+                            <td class="text-center"> <%= user.email%> </td>
+                            <td class="text-center">
+                                <a href="/teammateUpdate/<%= user.userId%>" class="" title="Edit" data-toggle='tooltip' data-placement='top' lang=''>
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                &nbsp;
+                                <a onclick="removeTeammate('<%= user.userId %>','<%= user.firstname + " " + user.lastname %>    ');" class="" title="Delete" data-toggle='tooltip' data-placement='top' lang=''>
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                    </div>
+
+        </div>
+
+    </div>
+
+
+<%- include leftPanel %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script>
+    function removeTeammate(teammateId,firstname) {
+        console.log("removeGym called...");
+        console.log("teammateId : "+teammateId);
+        console.log("firstname : "+firstname);
+
+        bootbox.confirm("Are you sure want to delete " +firstname+ "?", function(confirmed)
+        {
+            if(confirmed === true)
+            {
+                var url = '/deleteTeammate/'+teammateId;
+                console.log("url : "+url);
+                window.location = url;
+            }
+            else
+            {
+                return true;
+            }
+        });
+
+    }
+</script>
+
+<script>
+    $(document).ready(function(){
+
+        $('#myImgModal').on('show.bs.modal', function(e) {
+
+            var img = $(e.relatedTarget).data('img');
+            var username = $(e.relatedTarget).data('username');
+
+            console.log("myImgModal on called..."+username);
+            console.log(img);
+
+            $('#imagepreview').attr('src', img);
+            modalheader.innerText = username + "'s image";
+        });
+
+    });
+</script>
+
+<!--Modal for image preview-->
+<div class="modal fade" id="myImgModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="header">
+                    <h3 id="modalheader">
+                        Image Preview
+                    </h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <img src="" class="center" id="imagepreview" style="margin: 0 auto;"/>
+            </div>
+        </div>
+
+    </div>
+</div>

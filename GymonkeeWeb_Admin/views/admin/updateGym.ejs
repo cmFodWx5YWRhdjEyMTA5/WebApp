@@ -1,0 +1,1090 @@
+<style>
+    .margin-top-20px{
+        margin-top: 20px;
+    }
+    .margin-top-10px{
+        margin-top: 10px;
+    }
+    #due_date-error,#start_date-error{
+        opacity: 10;
+    }
+    .dropdown-header {
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .opt.dis {
+        display: none;
+    }
+
+    .form-group.form-md-line-input .help-block
+    {
+        opacity: 10 !important;
+    }
+
+    .white-font
+    {
+        color: white !important;
+    }
+
+    .center
+    {
+        display : inherit;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    .orangeBtn
+    {
+        background-color : orange;
+    }
+</style>
+
+
+
+<%- include header %>
+
+<section class="portlet light bordered">
+    <!-- Input -->
+    <% var messages = getMessages() %>
+    <% if(messages.notify) { %>
+    <div id="prefix_1179310738153" class="custom-alerts alert alert-success fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-info"></i>
+        <%= messages.notify%>
+    </div>
+    <% } %>
+    <% if(messages.error) { %>
+    <div id="prefix_1179310738153" class="custom-alerts alert alert-danger fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-warning"></i>
+        <%= messages.error%>
+    </div>
+    <% } %>
+
+    <div class="portlet-title">
+        <div class="caption caption-subject">
+            <i class="icon-bubble font-dark hide"></i>UPDATE GYM PROFILE  :   <span class="caption-subject font-hide bold uppercase"></span> 
+        </div>
+        <div class="caption caption-subject" style="float: right !important;">
+        <a href="#" data-toggle="modal" data-target="#createPurchaseOrder" >
+            <button type="submit" class="btn m-b-xs w-xs btn-warning waves-effect" style="background-color:rgb(220, 121, 52); ">
+                Create Purchase Order
+            </button>
+        </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <!-- Default form -->
+            <form  class="login-form" name="updateGym" method="post" action="/adminUpdateGym" enctype="multipart/form-data">
+                <div class="widget">
+                    <div class="">
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>Name</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter name" value="<%= gym.name%>"/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>Address</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="text" class="form-control" name="address" id="address" placeholder="Enter address" value="<%= gym.address%>" oninput="startUpdateAddress()"/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group form-md-line-input col-md-6">
+                                    <div class="control-group">
+                                        <label class="control-label"><b>Services </b></label>
+                                        <div class="controls">
+
+                                            <select class="form-control edited bs-select" data-live-search="true" id="services" name="services[]" multiple>
+                                                <% services.forEach(function(service){ %>
+                                                    <option value="<%= service%>" <% if(gym.Services.indexOf(service) > -1){ %> selected <%}%>>
+                                                        <%= service%>
+                                                    </option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <label class="control-label">
+                                        <b>Gym Manager Username</b>
+                                        <span class="text-error">* &nbsp;</span>
+                                    </label>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="username" id="username" placeholder="Enter Username" value="<%= gym.gymManagerName%>"/>
+                                        <input type="hidden" class="form-control" name="userid" id="userid" placeholder="" value="<%= gym.gymManagerId%>"/>
+                                        <span id="projectNameErr"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                    <label class="control-label"><b>Image 1</b><span class="text-error">* &nbsp;</span></label>
+                                    <div class="controls">
+                                        <input class="input-group form-control form-control-inline" type="file" value="" name="image1" id="image1"/>
+                                        <span id="projectNameErr"></span>
+                                    </div>
+
+                                </div>
+                                <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                    <a href="#" data-toggle="modal" data-img="<%= gym.img[0]%>" data-username="<%= gym.name%>" data-target="#myImgModal" >
+                                        <img src="<%= gym.img[0]%>" alt="logo" class="logo-default" width="50px" height="50px">
+                                    </a>
+                                </div>
+
+                                <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                    <label class="control-label"><b>Image 2</b><span class="text-error">* &nbsp;</span></label>
+                                    <div class="controls">
+                                        <input class="input-group form-control form-control-inline" type="file" value="" name="image2" id="image2"/>
+                                        <span id="projectNameErr"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                    <a href="#" data-toggle="modal" data-img="<%= gym.img[1]%>" data-username="<%= gym.name%>" data-target="#myImgModal" >
+                                        <img src="<%= gym.img[1]%>" alt="logo" class="logo-default" width="50px" height="50px">
+                                    </a>
+                                </div>
+
+                                <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                    <label class="control-label"><b>Image 3</b><span class="text-error">* &nbsp;</span></label>
+                                    <div class="controls">
+                                        <input class="input-group form-control form-control-inline" type="file" value="" name="image3" id="image3"/>
+                                        <span id="projectNameErr"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                    <a href="#" data-toggle="modal" data-img="<%= gym.img[2]%>" data-username="<%= gym.name%>" data-target="#myImgModal" >
+                                        <img src="<%= gym.img[2]%>" alt="logo" class="logo-default" width="50px" height="50px">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <label class="control-label"><b>Hours of Operation</b><span class="text-error">* &nbsp;</span></label>
+                                    <!--Sunday Row-->
+                                    <div class="row">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Sunday</label>
+                                        </div>
+                                        <div id="sunRow" <% if (gym.Sunday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Sunday_from%>" id="sunFrom" name="sunFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Sunday_to%>" id="sunTo" name="sunTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Sunday_Closed%>" name="sunClosed" id="sunClosed"
+                                                            <% if (gym.Sunday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <!--Monday Row-->
+                                    <div class="row" style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Monday</label>
+                                        </div>
+                                        <div id="monRow" <% if (gym.Monday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Monday_from%>" id="monFrom" name="monFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Monday_to%>" id="monTo" name="monTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Monday_Closed%>" name="monClosed" id="monClosed"
+                                                            <% if (gym.Monday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top: -78px !important;">
+                            <div class="row">
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <!--Tuesday Row-->
+                                    <div class="row"  style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Tuesday</label>
+                                        </div>
+                                        <div id="tueRow" <% if (gym.Tuesday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Tuesday_from%>" id="tueFrom" name="tueFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Tuesday_to%>" id="tueTo" name="tueTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Tuesday_Closed%>" name="tueClosed" id="tueClosed"
+                                                            <% if (gym.Tuesday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <!--Wednesday Row-->
+                                    <div class="row" style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Wednesday</label>
+                                        </div>
+                                        <div id="wedRow" <% if (gym.Wednesday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Wednesday_from%>" id="wedFrom" name="wedFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Wednesday_to%>" id="wedTo" name="wedTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Wednesday_Closed%>" name="wedClosed" id="wedClosed"
+                                                            <% if (gym.Wednesday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top: -78px !important;">
+                            <div class="row">
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <!--Thursday Row-->
+                                    <div class="row" style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Thursday</label>
+                                        </div>
+                                        <div id="thuRow" <% if (gym.Thursday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Thursday_from%>" id="thuFrom" name="thuFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Thursday_to%>" id="thuTo" name="thuTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Thursday_Closed%>" name="thuClosed" id="thuClosed"
+                                                            <% if (gym.Thursday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <!--Friday Row-->
+                                    <div class="row"  style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Friday</label>
+                                        </div>
+                                        <div id="friRow" <% if (gym.Friday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Friday_from%>" id="friFrom" name="friFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Friday_to%>" id="friTo" name="friTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Friday_Closed%>" name="friClosed" id="friClosed"
+                                                            <% if (gym.Friday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top: -78px !important;">
+                            <!--Saturday Row-->
+                            <div class="row">
+                                <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                                    <div class="row" style="margin-top: 25px !important;">
+                                        <div class="form-group form-md-line-input  col-md-2 margin-bottom-10">
+                                            <label class="control-label">Saturday</label>
+                                        </div>
+                                        <div id="satRow" <% if (gym.Saturday_Closed === '1') {%> style="display: none;" <% } %> >
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Saturday_from%>" id="satFrom" name="satFrom">
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                <label class="control-label to">TO</label>
+                                            </div>
+                                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                <input type="text" class="form-control timepicker timepicker_changed" data-format="hh:mm A" value="<%= gym.Saturday_to%>" id="satTo" name="satTo">
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-md-line-input  col-md-2" style="margin-top: -3px;">
+                                            <div class="mt-checkbox-list" >
+                                                <label class="mt-checkbox">
+                                                    Closed
+                                                    <input type="checkbox" value="<%= gym.Saturday_Closed%>" name="satClosed" id="satClosed"
+                                                            <% if (gym.Saturday_Closed === '1') {%> checked <% } %> />
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <% gym.pdf.forEach(function(pdf){ %>
+                            <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                <label class="control-label"><b>PDF</b><span class="text-error">* &nbsp;</span></label>
+                                <div class="controls">
+                                    <input class="input-group form-control form-control-inline" type="file" value="" name="image1" id="image1"/>
+                                    <span id="projectNameErr"></span>
+                                </div>
+                            </div>                        
+                            <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                <a href="#" data-toggle="modal" data-img="<%= pdf%>" data-username="<%= gym.name%>" data-target="#myPdfModal" >
+                                    PDF Preview
+                                </a>
+                            </div>
+                        <% }) %> -->
+
+                        <% if(gym.pdf.length > 0) { %>
+                        <div class="form-group form-md-line-input  col-md-12 margin-bottom-10">
+                            <label class="control-label"><b>PDF Attchments</b></label>
+                            <div class="form-group mt-repeater ">
+                                <div data-repeater-list="group-b">
+                                    <div data-repeater-item class="mt-repeater-item mt-overflow">
+                                        <!-- <label class="control-label">Additional PDF</label> -->
+                                        <% gym.pdf.forEach(function(pdf,index){ %>
+                                            <div class="mt-repeater-cell">
+                                                <div class="form-group form-md-line-input  col-md-3 margin-bottom-10">
+                                                    <input class="input-group form-control form-control-inline" type="file" value="" name="pdfAdd" id="pdfAdd" accept=".pdf"/>
+                                                </div>
+                                                <div class="form-group form-md-line-input  col-md-1 margin-bottom-10">
+                                                    <a href="#" data-toggle="modal" data-img="<%= pdf%>" data-username="<%= gym.name%>" data-target="#myPdfModal" style="overflow: hidden;">
+                                                        PDF Preview <%= (index+1)%>  
+                                                        <!-- <iframe src="<%= pdf%>" class="center" id="pdfpreview" style="width: 50px;height: 50px;">
+                                                        </iframe> -->
+                                                    </a>
+                                                </div>
+                                            </div>  
+                                        <% }) %>                                      
+                                    </div>
+                                </div>
+                                <a href="javascript:;" data-repeater-create class="btn btn-success mt-repeater-add" style="display: none !important">
+                                    <i class="fa fa-plus"></i> Add new pdf
+                                </a>
+                            </div>
+                        </div>
+                        <% } %>   
+                        <div class="col-md-12 text-right" style="margin-top:30px;">
+
+                            <input type="hidden" class="form-control" id="city" name="city" placeholder="" value="<%= gym.city%>">
+                            <input type="hidden" class="form-control" id="state" name="state" placeholder="" value="<%= gym.state%>">
+                            <input type="hidden" class="form-control" id="latitude" name="latitude" placeholder="" value="<%= gym.latitude%>">
+                            <input type="hidden" class="form-control" id="longitude" name="longitude" placeholder="" value="<%= gym.longitude%>">
+                            <input type="hidden" class="form-control" id="zipcode" name="zipcode" placeholder="" value="<%= gym.zipcode%>">
+                            <input type="hidden" class="form-control" id="gymId" name="gymId" placeholder="" value="<%= gym.id%>">
+                            <input type="hidden" class="form-control" id="selected_services_value" name="selected_services_value" placeholder="" value="">
+                            <input type="hidden" class="form-control" id="selected_hours_value" name="selected_hours_value" placeholder="" value="">
+                            <input type="hidden" class="form-control" id="maxImageSize" name="maxImageSize" placeholder="" value="<%= maxImageSize%>">
+                            <input type="hidden" class="form-control" id="gymManagerEmail" name="gymManagerEmail" placeholder="" value="<%= gym.gymManagerEmail%>">
+
+                            <a class="" style="margin-top:5px;" title="Save" type="submit">
+                                <button type="submit" class="btn m-b-xs w-xs btn-primary waves-effect">
+                                    Save
+                                </button>
+                            </a>
+                            <a href="/manageGym" class="btn m-b-xs w-xs btn-danger waves-effect sort" lang="">
+                                Cancel
+                            </a>
+                            <!-- <div class="col-md-3">
+                                <a class="btn green btn-outline sbold uppercase" href="#form_modal2" data-toggle="modal"> View Datepicker in modal
+                                    <i class="fa fa-share"></i>
+                                </a>
+                            </div> -->
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <!-- /default form -->
+        </div>
+
+    </div>
+</section>
+
+<%- include leftPanel %>
+
+<script>
+    function startUpdateAddress()
+    {
+        console.log("startUpdateAddress called...");
+
+        $('#city').val('');
+        $('#state').val('');
+        $('#zipcode').val('');
+        $('#latitude').val('');
+        $('#longitude').val('');
+    }
+</script>
+
+<script>
+
+    $(document).ready(function()
+    {
+
+            // $('.date-picker').datepicker({
+            //     autoclose: true
+            // });
+
+        var i=0;
+        jQuery("input,textarea").on('keypress',function(e){
+            //alert();
+            if(jQuery(this).val().length < 1){
+                if(e.which == 32){
+                    //alert(e.which);
+                    return false;
+                }
+            }
+            else {
+                if(e.which == 32){
+                    if(i != 0){
+                        return false;
+                    }
+                    i++;
+                }
+                else{
+                    i=0;
+                }
+            }
+        });
+
+        $('.timepicker_changed').timepicker({
+            autoclose: true,
+            showSeconds: false,
+            minuteStep: 30
+        });
+
+        $("#sunClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#sunRow").hide();
+            } else {
+                $(this).val('0');
+                $("#sunRow").show();
+            }
+        });
+
+        $("#monClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#monRow").hide();
+            } else {
+                $(this).val('0');
+                $("#monRow").show();
+            }
+        });
+
+        $("#tueClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#tueRow").hide();
+            } else {
+                $(this).val('0');
+                $("#tueRow").show();
+            }
+        });
+
+        $("#wedClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#wedRow").hide();
+            } else {
+                $(this).val('0');
+                $("#wedRow").show();
+            }
+        });
+
+        $("#thuClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#thuRow").hide();
+            } else {
+                $(this).val('0');
+                $("#thuRow").show();
+            }
+        });
+
+        $("#friClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#friRow").hide();
+            } else {
+                $(this).val('0');
+                $("#friRow").show();
+            }
+        });
+
+        $("#satClosed").click(function () {
+            if ($(this).is(":checked")) {
+                $(this).val('1');
+                $("#satRow").hide();
+            } else {
+                $(this).val('0');
+                $("#satRow").show();
+            }
+        });
+
+        $('#address').bind("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+        $('#address').on('keypress', function (event) {
+            var regex = new RegExp("^[a-zA-Z0-9 ]+$");
+            var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (!regex.test(key)) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        jQuery.validator.addMethod("acceptImageTypes1", function (value, element) {
+            //return this.optional(element) || (parseFloat(value) <= 12);
+            var ext = $('#image1').val().split('.').pop().toLowerCase();
+            if(ext)
+            {
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) === -1) {
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+            else{
+                return true;
+            }
+        },"Selected File must be an image");
+
+        jQuery.validator.addMethod("acceptImageTypes2", function (value, element) {
+            //return this.optional(element) || (parseFloat(value) <= 12);
+            var ext = $('#image2').val().split('.').pop().toLowerCase();
+            if(ext)
+            {
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) === -1) {
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+            else{
+                return true;
+            }
+        },"Selected File must be an image");
+
+        jQuery.validator.addMethod("acceptImageTypes3", function (value, element) {
+            //return this.optional(element) || (parseFloat(value) <= 12);
+            var ext = $('#image3').val().split('.').pop().toLowerCase();
+            if(ext)
+            {
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) === -1) {
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+            else{
+                return true;
+            }
+        },"Selected File must be an image");
+
+        var maxImageSizeVal = $('#maxImageSize').val();
+
+        console.log("maxImageSizeVal update gym(admin): "+maxImageSizeVal);
+
+        $.validator.addMethod(
+            "maxfilesize",
+            function (value, element) {
+                if (this.optional(element) || ! element.files || ! element.files[0]) {
+                    return true;
+                } else {
+                    return element.files[0].size <= 1024 * 1024 * 2;
+                }
+            },
+            'The file size can not exceed '+maxImageSizeVal+'MB.'
+        );
+
+        $("form[name = 'updateGym']").validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                name : {
+                    required: true
+                },
+                address : {
+                    required: true
+                },
+                'hours_of_operation[]': {
+                    required: true
+                },
+                username : {
+                    required : true
+                },
+                /*coins : {
+                    required: true,
+                },*/
+                'services[]' : {
+                    required: true
+                },
+                image1 : {
+                    // required: true,
+                    acceptImageTypes1 : true,
+                    maxfilesize : true
+                },
+                image2 : {
+                    // required: true,
+                    acceptImageTypes2 : true,
+                    maxfilesize : true
+                },
+                image3 : {
+                    // required: true,
+                    acceptImageTypes3 : true,
+                    maxfilesize : true
+                }
+                /*gymBarCode: {
+                    required: true
+                }*/
+            },
+            messages: {
+                name:{
+                    required: "Please enter name"
+                },
+                address : {
+                    required: "Please enter address"
+                },
+                'hours_of_operation[]': {
+                    required: "Please enter hours of operation"
+                },
+                /*coins : {
+                    required: "Please enter coins"
+                },*/
+                'services[]' : {
+                    required: "Please select services"
+                },
+                /*image1 : {
+                    required: "Please select image1"
+                },
+                image2 : {
+                    required: "Please select image2"
+                },
+                image3 : {
+                    required: "Please select image3"
+                }*/
+                /*gymBarCode : {
+                    required: "Please enter Barcode"
+                }*/
+                username : {
+                    required : "Please enter username"
+                }
+            },
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                $('.alert-danger', $('.form-horizontal')).show();
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+            onfocusout: function (element) {
+                $(element).valid();
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.closest('.form-control'));
+            },
+            submitHandler: function (form) {
+                // alert("true");
+                var servicesValues = [];
+                $('#services :selected').each(function() {
+                    console.log("submitHandler add gym : "+$(this).attr('value'));
+                    servicesValues.push( $(this).attr('value') );
+                });
+                $("#selected_services_value").val(servicesValues);
+
+                var hoursValues = [];
+                $('#hours_of_operation :selected').each(function() {
+                    console.log("submitHandler add gym : "+$(this).attr('value'));
+                    hoursValues.push( $(this).attr('value') );
+                });
+                $("#selected_hours_value").val(hoursValues);
+
+                var lat = $('#latitude').val();
+                var long = $('#longitude').val();
+
+                console.log("lat : "+lat+" ,long : "+long);
+
+                if ((lat.length > 0) && (long.length > 0)) {
+                    form.submit();
+                } else {
+                    $('#address').closest('.form-group').addClass('has-error');
+                    $('#address').closest('.form-group').append('<span id="barcode-error" class="help-block">Please select address from google autocomplete.</span>');
+                    return false;
+                }
+            }
+        });
+
+    });
+
+
+</script>
+
+
+<script>
+    var placeSearch, autocomplete;
+
+    function initAutocomplete() {
+        // Create the autocomplete object, restricting the search to geographical
+        // location types.
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('address')),
+            {types: ['geocode']});
+
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
+    }
+
+    function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        var place = autocomplete.getPlace();
+
+        var area, city, zipcode, state;
+        $.each(place, function(k1,v1) {
+            if (k1 == "address_components") {
+                for (var i = 0; i < v1.length; i++) {
+                    for (k2 in v1[i]) {
+                        if (k2 == "types") {
+                            var types = v1[i][k2];
+                            // console.log("types: " + types);
+                            // console.log("v1[i]: " + v1[i].long_name);
+                            if (types[0] =="sublocality_level_1") {
+                                area = v1[i].long_name;
+                                //alert ("area: " + area);
+                            }
+                            if (types[0] =="locality") {
+                                city = v1[i].long_name;
+                                //alert ("city: " + city);
+                            }
+                            if (types[0] =="postal_code") {
+                                zipcode = v1[i].short_name;
+                                //alert ("zipcode: " + zipcode);
+                            }
+                            if (types[0] =="administrative_area_level_1") {
+                                state = v1[i].long_name;
+                                //alert ("zipcode: " + zipcode);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $('#city').val(city);
+        $('#state').val(state);
+        $('#zipcode').val(zipcode);
+        $('#latitude').val(place.geometry.location.lat());
+        $('#longitude').val(place.geometry.location.lng());
+
+    }
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDP76rTZusQqYFwVBTwkw_1fB1_a-IJJvs&libraries=places&callback=initAutocomplete" async defer></script>
+
+<script>
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    //https://stackoverflow.com/questions/2808184/restricting-input-to-textbox-allowing-only-numbers-and-decimal-point?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    function isNumberKey(evt)
+    {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31 
+        && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $(document).ready(function(){
+        $('#myImgModal').on('show.bs.modal', function(e) {
+
+            var img = $(e.relatedTarget).data('img');
+            var username = $(e.relatedTarget).data('username');
+
+            console.log("myImgModal on called..."+username);
+            console.log(img);
+
+            $('#imagepreview').attr('src', img);
+            modalheader.innerText = username + "'s image";
+        });
+
+        $('#myPdfModal').on('show.bs.modal', function(e) {
+
+            var img = $(e.relatedTarget).data('img');
+            var username = $(e.relatedTarget).data('username');
+
+            console.log("myPdfModal on called..."+img);
+            var newImgUrl = img.replace("http", "https")
+            console.log("newImgUrl : "+newImgUrl);
+
+            $('#pdfpreview').attr('src', newImgUrl);
+            modalheader.innerText = username + "'s image";
+        });
+
+        $('#createPurchaseOrder').on('show.bs.modal', function(e) {
+
+            console.log("createPurchaseOrder open...");
+
+            $("#orderDate").val('');
+
+            $('#orderDate').closest('.form-group').removeClass('has-error');
+            $('#orderDate').closest('.form-group').removeClass('help-block');
+
+            $("#amount").val('');
+            // $('#terms').val('gym');
+        });
+
+        $('.date-picker1').datepicker({
+            rtl: App.isRTL(),
+            orientation: "left",
+            autoclose: true,
+            format : 'dd-mm-yyyy'
+        });
+
+        $("form[name = 'createPurchaseOrderForm']").validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                orderDate : {
+                    required: true
+                },
+                amount : {
+                    required: true
+                },
+                'terms[]': {
+                    required: true
+                }
+            },
+            messages: {
+                orderDate:{
+                    required: "Please choose Purchase Order Date"
+                },
+                amount : {
+                    required: "Please enter amount"
+                },
+                'terms[]': {
+                    required: "Please choose Agreement Terms"
+                }
+            },
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                $('.alert-danger', $('.form-horizontal')).show();
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+            onfocusout: function (element) {
+                $(element).valid();
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.closest('.form-control'));
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+
+<!--Modal for image preview-->
+<div class="modal fade" id="myImgModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="header">
+                    <h3 id="modalheader">
+                        Image Preview
+                    </h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <img src="" class="center" id="imagepreview" style="margin: 0 auto;"/>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal for PDF preview-->
+<div class="modal fade" id="myPdfModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="header">
+                    <h3 id="modalheader">
+                        PDF Preview
+                    </h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <iframe src="" class="center" id="pdfpreview" style="/* margin: 0 auto; */width: 100%;height: 80%;">
+                </iframe>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal for create purchase order -->
+<div class="modal fade" id="createPurchaseOrder" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="header">
+                <h3>
+                    Create Purchase Order
+                </h3>
+            </div>
+        </div>
+        <form id="validate" name="createPurchaseOrderForm" action="/createPurchaseOrder" method="post">
+            <div class="form-group form-md-line-input  col-md-12">
+                <div class="col-md-4">
+                    <label class="control-label">Purchase Order Date<span class="text-error">* &nbsp;</span>:</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control date-picker1" name="orderDate" id="orderDate" placeholder="Select Purchase Order Date" value="" data-date-format="dd-mm-yyyy" data-date-start-date="+0d" readonly/>
+                </div>
+            </div>
+            <div class="form-group form-md-line-input  col-md-12">
+                <div class="col-md-4">
+                    <label class="control-label">Amount<span class="text-error">* &nbsp;</span>:</label>
+                </div>
+                <div class="controls col-md-8">
+                    <input type="text" name="amount" value="" id="amount" class="form-control" placeholder="Enter Amount" onkeypress="return isNumberKey(event)" />
+                </div>
+            </div>
+            <div class="form-group form-md-line-input  col-md-12">
+                <div class="col-md-4">
+                    <label class="control-label">Agreement Terms<span class="text-error">* &nbsp;</span>:</label>
+                </div>
+                <div class="controls col-md-8">
+                    <div class="controls">
+                        <select class="form-control edited bs-select" data-live-search="true" id="terms" name="terms">
+                            <% terms.forEach(function(term){ %>
+                                <option value="<%= term%>"><%= term%></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" class="form-control" name="gymManagerStripeConnectId" id="gymManagerStripeConnectId" placeholder="" value="<%= gym.gymManagerStripeConnectId%>"/>
+            <input type="hidden" class="form-control" id="gymId" name="gymId" placeholder="" value="<%= gym.id%>">
+            <input type="hidden" class="form-control" id="gymManagerEmail" name="gymManagerEmail" placeholder="" value="<%= gym.gymManagerEmail%>">
+            <input type="hidden" class="form-control" name="gymManagerName" id="gymManagerName" placeholder="Enter Username" value="<%= gym.gymManagerName%>"/>
+            <input type="hidden" class="form-control" name="gymName" id="gymName" placeholder="Enter Username" value="<%= gym.name%>"/>
+            <div class="modal-footer">
+                <!-- style="text-align: center !important"> -->
+                <button type="submit" name="FormSubmit" class="btn m-b-xs w-xs btn-primary waves-effect">Complete Purchase Order</button>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</div>

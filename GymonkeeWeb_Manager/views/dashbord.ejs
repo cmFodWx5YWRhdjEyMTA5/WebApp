@@ -1,0 +1,177 @@
+
+<%- include header %>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-blue-sharp">
+                        <span data-counter="counterup" data-value="<%= totalUsers%>"></span>
+                    </h3>
+                    <small>Total USERS</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-users"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-purple-soft">
+                        <span data-counter="counterup" data-value="<%= totalCheckIns%>"></span>
+                    </h3>
+                    <small>Total Swing-Ins</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-user"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-green-sharp">
+                        <span data-counter="counterup" data-value="<%= balance%>"></span>
+                    </h3>
+                    <small>Coin Balance</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-wallet"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-red-haze">
+                        <span data-counter="counterup" data-value="<%= gymRating%>"></span>
+                    </h3>
+                    <small>Gym Rating</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-star"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12 col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption ">
+                    <span class="caption-subject font-dark bold uppercase">Swing-Ins</span>
+                    <span class="caption-helper">users...</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="dashboard_amchart_3" class="CSSAnimationChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include leftPanel %>
+
+<script>
+    function chart() {
+        // alert("true");
+        if (typeof(AmCharts) === 'undefined' || $('#dashboard_amchart_3').size() === 0) {
+            return;
+        }
+
+        var chart = AmCharts.makeChart("dashboard_amchart_3", {
+            "type": "serial",
+            "addClassNames": true,
+            "theme": "light",
+            "path": "../assets/global/plugins/amcharts/ammap/images/",
+            "autoMargins": false,
+            "marginLeft": 30,
+            "marginRight": 8,
+            "marginTop": 10,
+            "marginBottom": 26,
+            "balloon": {
+                "adjustBorderColor": false,
+                "horizontalPadding": 10,
+                "verticalPadding": 8,
+                "color": "#ffffff"
+            },
+
+            // "dataProvider": [{
+            //     "date": "19-03-2018",
+            //     "checkIn": 23,
+            // }, {
+            //     "date":  "20-03-2018",
+            //     "checkIn": 26,
+            // }, {
+            //     "date":  "21-03-2018",
+            //     "checkIn": 30,
+            // }, {
+            //     "date":  "22-03-2018",
+            //     "checkIn": 29,
+            // }, {
+            //     "date":  "23-03-2018",
+            //     "checkIn": 30,
+            // },{
+            //     "date":  "24-03-2018",
+            //     "checkIn": 30,
+            // },{
+            //     "date":  "25-03-2018",
+            //     "checkIn": 30,
+            // }],
+            "dataProvider": [<% weekly.forEach(function(element) {
+                %>{"date" : "<%= element.date %>",
+                "checkIn" : "<%= element.checkIn %>"},
+            <% }); %>],
+            "valueAxes": [{
+                "axisAlpha": 0,
+                "position": "left"
+            }],
+            "startDuration": 1,
+            "graphs": [{
+                "alphaField": "alpha",
+                "balloonText": "<span style='font-size:12px;'>[[title]] in [[category]]:<br><span style='font-size:20px;'>[[value]]</span> [[additional]]</span>",
+                "fillAlphas": 1,
+                "title": "Swing-In",
+                "type": "column",
+                "valueField": "checkIn",
+                "dashLengthField": "dashLengthColumn"
+            }, {
+                "id": "graph2",
+                "balloonText": "<span style='font-size:12px;'>[[title]] in [[category]]:<br><span style='font-size:20px;'>[[value]]</span> [[additional]]</span>",
+                "bullet": "round",
+                "lineThickness": 3,
+                "bulletSize": 7,
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "useLineColorForBulletBorder": true,
+                "bulletBorderThickness": 3,
+                "fillAlphas": 0,
+                "lineAlpha": 1,
+                "title": "Expenses",
+                "valueField": "expenses"
+            }],
+            "categoryField": "date",
+            "categoryAxis": {
+                "gridPosition": "start",
+                "axisAlpha": 0,
+                "tickLength": 0
+            },
+            "export": {
+                "enabled": true
+            }
+        });
+    }
+    $(document).ready(function () {
+        chart();
+    })
+</script>

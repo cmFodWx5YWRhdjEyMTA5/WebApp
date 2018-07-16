@@ -1,0 +1,331 @@
+<style>
+    .margin-top-20px{
+        margin-top: 20px;
+    }
+    .margin-top-10px{
+        margin-top: 10px;
+    }
+    #due_date-error,#start_date-error{
+        opacity: 10;
+    }
+    .dropdown-header {
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .opt.dis {
+        display: none;
+    }
+
+    .form-group.form-md-line-input .help-block
+    {
+        opacity: 10 !important;
+    }
+
+    .white-font
+    {
+        color: white !important;
+    }
+</style>
+
+
+
+<%- include header %>
+
+<section class="portlet light bordered">
+    <!-- Input -->
+    <% var messages = getMessages() %>
+    <% if(messages.notify) { %>
+    <div id="prefix_1179310738153" class="custom-alerts alert alert-success fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-info"></i>
+        <%= messages.notify%>
+    </div>
+    <% } %>
+    <% if(messages.error) { %>
+    <div id="prefix_1179310738153" class="custom-alerts alert alert-danger fade in"><button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button><i class="fa-lg fa fa-warning"></i>
+        <%= messages.error%>
+    </div>
+    <% } %>
+
+    <div class="portlet-title">
+        <div class="caption caption-subject"> <i class="icon-bubble font-dark hide"></i>ADD NEW TEAMMATE :   <span class="caption-subject font-hide bold uppercase"></span> </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <!-- Default form -->
+            <!--<form id="validate" name="addTask" action="/updateGym" method="post" enctype="multipart/form-data">-->
+            <!--enctype="multipart/form-data"-->
+            <form  class="login-form" name="addUser" method="post" action="/addNewTeammate">
+                <div class="widget">
+                    <div class="">
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>First Name</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="text" class="form-control" name="firstname" id="firstname" placeholder="Enter firstname" value=""/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>Last Name</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="text" class="form-control" name="lastname" id="lastname" placeholder="Enter lastname" value=""/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>Email</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Enter email" value=""/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-md-line-input  col-md-6 margin-bottom-10">
+                            <label class="control-label"><b>Password</b><span class="text-error">* &nbsp;</span></label>
+                            <div class="controls">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" value=""/>
+                                <span id="projectNameErr"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 text-right" style="margin-top:30px;">
+
+                            <a class="" style="margin-top:5px;" title="Save" type="submit">
+                                <button type="submit" class="btn m-b-xs w-xs btn-primary waves-effect">
+                                    Save
+                                </button>
+                            </a>
+                            <a href="/teammates" class="btn m-b-xs w-xs btn-danger waves-effect sort" lang="">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <!-- /default form -->
+        </div>
+
+    </div>
+</section>
+<!--<script src="../assets/pages/scripts/components-date-time-pickers.min.js"
+        type="text/javascript"></script>
+<link href="../assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"
+      rel="stylesheet" type="text/css"/>
+
+<script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"
+        type="text/javascript"></script>-->
+
+<script>
+
+    /*  $('.date-picker').datepicker({
+          rtl: App.isRTL(),
+          orientation: "left",
+          autoclose: true
+      });*/
+
+    $(document).ready(function()
+    {
+        var i=0;
+        jQuery("input,textarea").on('keypress',function(e){
+            //alert();
+            if(jQuery(this).val().length < 1){
+                if(e.which == 32){
+                    //alert(e.which);
+                    return false;
+                }
+            }
+            else {
+                if(e.which == 32){
+                    if(i != 0){
+                        return false;
+                    }
+                    i++;
+                }
+                else{
+                    i=0;
+                }
+            }
+        });
+
+        jQuery.validator.addMethod("acceptImageTypes", function (value, element) {
+            //return this.optional(element) || (parseFloat(value) <= 12);
+            var ext = $('#image').val().split('.').pop().toLowerCase();
+            if(ext)
+            {
+                if($.inArray(ext, ['gif','png','jpg','jpeg']) === -1) {
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+            else{
+                return true;
+            }
+        },"Selected File must be an image");
+
+        var maxImageSizeVal = $('#maxImageSize').val();
+
+        console.log("maxImageSizeVal add user(admin): "+maxImageSizeVal);
+
+        $.validator.addMethod("maxfilesize", function (value, element) {
+                if (this.optional(element) || ! element.files || ! element.files[0]) {
+                    return true;
+                } else {
+                    return element.files[0].size <= 1024 * 1024 * 2;
+                }
+            },
+            'The file size can not exceed '+maxImageSizeVal+'MB.'
+        );
+
+        var _URL = window.URL || window.webkitURL;
+        //https://stackoverflow.com/questions/12570834/how-to-preview-image-get-file-size-image-height-and-width-before-upload
+        $.validator.addMethod('maxfileWidthHeight', function(value, element, param) {
+
+                // alert("maxfileWidthHeight called.");
+
+                var _URL = window.URL;
+                var  img;
+                if ((element = element.files[0])) {
+
+                    // alert("if ((element called.");
+
+                    img = new Image();
+                    img.onload = function () {
+
+                        // alert("onload called.");
+
+                        console.log("Width:" + this.width + "   Height: " + this.height);//this will give you image width and height and you can easily validate here....
+                        console.log("(this.width === 200 && this.height === 200) : "+(this.width === 200 && this.height === 200));
+                        // return this.width >= param
+
+                        if (this.width == 200 && this.height == 200)
+                        {
+                            $("#image").closest().removeClass('help-block');
+                            return true;
+
+
+                        }
+                    };
+                    img.src = _URL.createObjectURL(element);
+                }
+            },
+            'The profile image should be square.'
+        );
+
+        /*$.validator.addMethod("maxfileWidthHeight",function (value, element) {
+                var file, img;
+                if ((file = element.files[0]))
+                {
+                    img = new Image();
+                    img.onload = function() {
+
+                        console.log("width : "+img.width+" ,height : "+img.height+" ,square : "+(img.width === 200 && img.height === 200));
+
+                        if (img.width === 200 && img.height === 200)
+                        {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    img.src = _URL.createObjectURL(file);
+                }
+                else{
+                    return false;
+                }
+            },
+            'The profile image should be square.'
+        );*/
+
+        $("form[name = 'addUser']").validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                firstname : {
+                    required: true
+                },
+                lastname : {
+                    required: true
+                },
+                image: {
+                    required: true,
+                    acceptImageTypes : true,
+                    maxfilesize : true,
+                    maxfileWidthHeight : true
+                },
+                email : {
+                    required: true
+                },
+                password : {
+                    required : true
+                },
+                birthdate : {
+                    required : true
+                },
+                state : {
+                    required: true
+                },
+                city : {
+                    required: true
+                }
+            },
+            messages: {
+                firstname : {
+                    required: "Please enter first name"
+                },
+                lastname : {
+                    required: "Please enter last name"
+                },
+                image: {
+                    required: "Please select profile image"
+                },
+                email : {
+                    required: "Please enter email"
+                },
+                password : {
+                    required : "Please enter password"
+                },
+                birthdate : {
+                    required : "Please select birthdate"
+                },
+                state : {
+                    required: "Please enter state"
+                },
+                city : {
+                    required: "Please enter city"
+                }
+            },
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                $('.alert-danger', $('.form-horizontal')).show();
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+            onfocusout: function (element) {
+                $(element).valid();
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.closest('.form-control'));
+            },
+            submitHandler: function (form) {
+                // alert("true");
+                form.submit();
+            }
+        });
+
+    });
+
+
+</script>
+
+
+<%- include leftPanel %>
+

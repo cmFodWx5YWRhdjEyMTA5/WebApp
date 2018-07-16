@@ -1,0 +1,249 @@
+<style>
+    .portlet.box.green
+    {
+        border: 0px solid !important;
+    }
+    .portlet.box.green > .portlet-title, .portlet.green, .portlet > .portlet-body.green
+    {
+        background-color : #4b666e !important;
+    }
+    /*.portlet>.portlet-title>.tools*/
+    /*{*/
+        /*float: right;*/
+        /*display: inline-block;*/
+        /*padding: 9px 0 8px;*/
+    /*}*/
+
+    .center
+    {
+        display : inherit;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        object-fit: contain;
+    }
+    ul {
+        list-style: none;
+        padding: 5px;
+    }
+    li {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+</style>
+<%- include header %>
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class=""></i>
+                    GYM LISTING
+                </div>
+                <div class="tools">
+                    <a class="" href="/addGymByAdmin" style="margin-top:-8px;" title="Add Gym">
+                        <button type="submit" class="btn btn-md white btn-outline margin-bottom-10 margin-right-10 ">
+                            Add Gym
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="sample_2">
+                    <thead>
+                    <tr>
+                        <th class="text-center"> Image </th>
+                        <th class="text-center"> Name </th>
+                        <th class="text-center"> Coins </th>
+                        <th class="text-center"> Coin Balance </th>
+                        <th class="text-center"> Hours of Opertaion </th>
+                        <th class="text-center"> Services </th>
+                        <th class="text-center"> Address </th>
+                        <th class="text-center"> Avg Rate </th>
+                        <th class="text-center"> Manager username </th>
+                        <th class="text-center"> Manager email </th>
+                        <!--<th class="text-center"> Barcode </th>-->
+                        <th class="text-center"> Actions </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <% result.forEach(function(gym){ %>
+                    <tr>
+
+                        <td class="text-center">
+                            <a href="#" data-toggle="modal" data-img="<%= gym.coverImage%>" data-username="<%= gym.name%>" data-target="#myImgModal" >
+                                <img src="<%= gym.coverImage%>" border=3 height=50 width=50 />
+                            </a>
+                        </td>
+                        <td class="text-center"> <%= gym.name %> </td>
+                        <td class="text-center"> <%= gym.coins %> </td>
+                        <td class="text-center"> <%= gym.coinBalance %> </td>
+                        <td class="text-center">
+                            <a href="#" data-toggle="modal" data-hours="<%= gym.hoursOfOperation%>" data-name="<%= gym.name%>" data-target="#myHoursModal">
+                                closed <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <!--<%= gym.hoursOfOperation %>-->
+                        </td>
+                        <td class="text-center"> <%= gym.Services %> </td>
+                        <td class="text-center"> <%= gym.address %> </td>
+                        <td class="text-center"> <%= gym.avgRate %> </td>
+                        <td class="text-center"> <%= gym.gymManagerName %> </td>
+                        <td class="text-center"> <%= gym.gymManagerEmail %> </td>
+                        <!--<td> <%= gym.gymBarCode %> </td>-->
+                        <td class="text-center">
+                            <a href="/adminGymUpdate/<%= gym.gymId %>" class="" title="Edit" data-toggle='tooltip' data-placement='top' lang=''>
+                                <i class="fa fa-edit"></i>
+                            </a>
+
+                            <% if (session.currentUser.type == session.UserType_SuperAdmin) {%>
+
+                            &nbsp;
+
+                                <a onclick="removeGym('<%= gym.name %>','<%= gym.gymId %>','<%= gym.gymManagerId%>');" class="" title="Delete" data-toggle='tooltip' data-placement='top' lang=''>
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            &nbsp;
+                            
+                            <% } %>
+
+                            <!--https://fontawesome.com/v4.7.0/icons/-->
+                            <% if (session.currentUser.type == session.UserType_SuperAdmin) {%>
+                                <a href="/adminGymBarcode/<%= gym.gymId %>" class="" title="Coin" data-toggle='tooltip' data-placement='top' lang=''>
+                                    <i class="fa fa-money"></i>
+                                </a>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<%- include leftPanel %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+<script>
+    function removeGym(gymName,gymId,gymManagerId) {
+        console.log("removeGym called...");
+        console.log("gymName : "+gymName);
+        console.log("gymId : "+gymId);
+        console.log("gymManagerId : "+gymManagerId);
+
+        bootbox.confirm("Are you sure want to delete " +gymName+ "?", function(confirmed)
+        {
+            if(confirmed === true)
+            {
+                var url = '/deleteGymByAdmin/'+gymId+'/'+gymManagerId;
+                console.log("url : "+url);
+                window.location = url;
+            }
+            else
+            {
+                return true;
+            }
+        });
+
+    }
+</script>
+
+<script>
+    $(document).ready(function(){
+
+        $('#myImgModal').on('show.bs.modal', function(e) {
+
+            var img = $(e.relatedTarget).data('img');
+            var username = $(e.relatedTarget).data('username');
+
+            console.log("myImgModal on called..."+username);
+            console.log(img);
+
+            $('#imagepreview').attr('src', img);
+            modalheader.innerText = username + "'s image";
+        });
+
+        $('#myHoursModal').on('show.bs.modal', function(e) {
+
+            var hoursOfOperation = $(e.relatedTarget).data('hours');
+            var name = $(e.relatedTarget).data('name');
+
+            console.log("myHoursModal on called..."+name);
+            console.log(hoursOfOperation);
+
+            var hours_array = hoursOfOperation.split(',');
+            console.log("hours_array : "+hours_array," ,length : "+hours_array.length);
+
+            var ul = document.createElement('ul');
+
+            $("#hours").children().remove();
+
+            document.getElementById('hours').appendChild(ul);
+
+            hours_array.forEach(function(name){
+                var li = document.createElement('li');
+                ul.appendChild(li);
+                li.innerHTML += name;
+            });
+
+            modalheader1.innerText = name + " 's Hours of Operation";
+        });
+    });
+</script>
+
+<!--Modal for image preview-->
+<div class="modal fade" id="myImgModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="header">
+                    <h3 id="modalheader">
+                        Image Preview
+                    </h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <img src="" class="center" id="imagepreview" style="margin: 0 auto;"/>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal for hours of operation -->
+<div class="modal fade" id="myHoursModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="header">
+                    <h3 id="modalheader1">
+                        Image Preview
+                    </h3>
+                </div>
+            </div>
+            <div class="modal-body">
+                <ul style="list-style-type:none" id="hours" name="hours">
+                    <!--<li>Coffee</li>-->
+                    <!--<li>Tea</li>-->
+                    <!--<li>Milk</li>-->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>

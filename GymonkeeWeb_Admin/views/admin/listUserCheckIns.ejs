@@ -1,0 +1,143 @@
+<style>
+        .portlet.box.green
+        {
+            border: 0px solid !important;
+        }
+    
+        .portlet.box.green > .portlet-title, .portlet.green, .portlet > .portlet-body.green
+        {
+            background-color : #4b666e !important;
+        }
+    
+        .center
+        {
+            display : inherit;
+            margin-left: auto;
+            margin-right: auto;
+            object-fit: contain;
+        }
+    </style>
+    <%- include header %>
+    
+    
+        <div class="row">
+    
+            <div class="col-md-12">
+    
+                <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class=""></i>USERS SWING-INS</div>
+                                <div class="tools"> </div>
+                            </div>
+                            <div class="portlet-body">
+                                <table class="table table-striped table-bordered table-hover" id="sample_2">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center"> Gym </th>
+                                        <th class="text-center"> Image </th>
+                                        <th class="text-center"> Username </th>
+                                        <th class="text-center"> City </th>
+                                        <th class="text-center"> State </th>
+                                        <th class="text-center"> DateTime </th>
+                                        <th class="text-center"> Barcode </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+    
+                                    <% result.forEach(function(user){ 
+                                        
+                                        var dateStr = user.dateTime
+                                    %>
+                                    <tr>
+                                        <td class="text-center"> <%= user.gymName %> </td>
+                                        <td class="text-center">
+                                            <a href="#" data-toggle="modal" data-img="<%= user.userProfileImage%>" data-username="<%= user.userName%>" data-target="#myImgModal" >
+                                                <img src="<%= user.userProfileImage%>" border=3 height=50 width=50 />
+                                            </a>
+                                        </td>
+                                        <td class="text-center"> <%= user.userName %> </td>
+                                        <td class="text-center"> <%= user.userCity%> </td>
+                                        <td class="text-center"> <%= user.userState%> </td>
+                                        <td class="text-center"> <%= dateStr %> </td>
+                                        <!--<td class="text-center"> <img src="<%= user.barcodeURL%>" border=3 height=50 width=130></img> </td>-->
+                                        <td class="text-center"> <% if (user.checkInStatus == 1) { %>
+    
+                                            <!--<a href="#" data-toggle="modal" data-id="<%= user.id%>" data-barcode="<%= user.barcodeVal%>" data-barcode1="<%= user.barcodeId%>" data-gym="<%= user.gymId%>" data-user="<%= user.userId%>" data-coins="<%= user.gymCoins %>" data-balance="<%= user.gymCoinBalance %>" data-target="#myModal" >-->
+                                                <!--<i class="fa fa-plus"></i>-->
+                                            <!--</a>-->
+    
+                                            Not processed Swing-In
+    
+                                            <% } else if (user.checkInStatus == 2) { %>
+    
+                                            <img src="<%= user.barcodeURL%>" border=3 height=50 width=130 />
+    
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+    
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+    
+            </div>
+    
+        </div>
+    
+    
+    <%- include leftPanel %>
+    
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+
+    <script>
+        $(document).ready(function(){
+    
+            console.log("moment().format()...");
+            console.log(moment().format());
+
+            console.log("moment.tz.localZone()...");
+            console.log(moment.local().format('YYYY-MMM-DD h:mm A'));
+
+            console.log("result...");
+            console.log(result);
+
+            $('#myImgModal').on('show.bs.modal', function(e) {
+    
+                var img = $(e.relatedTarget).data('img');
+                var username = $(e.relatedTarget).data('username');
+    
+                console.log("myImgModal on called..."+username);
+                console.log(img);
+    
+                $('#imagepreview').attr('src', img);
+                modalheader.innerText = username + "'s image";
+            });
+    
+        });
+    </script>
+    
+    <!--Modal for image preview-->
+    <div class="modal fade" id="myImgModal" role="dialog">
+        <div class="modal-dialog">
+    
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <div class="header">
+                        <h3 id="modalheader">
+                            Image Preview
+                        </h3>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <img src="" class="center" id="imagepreview" style="margin: 0 auto;"/>
+                </div>
+            </div>
+    
+        </div>
+    </div>

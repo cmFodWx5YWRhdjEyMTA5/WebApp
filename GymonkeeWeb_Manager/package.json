@@ -1,0 +1,32 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^1.2.0",
+    "body-parser": "~1.0.0",
+    "bwip-js": "^1.6.3",
+    "cookie-parser": "^1.0.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "debug": "~0.7.4",
+    "ejs": "^0.8.8",
+    "express": "~4.0",
+    "express-flash": "0.0.2",
+    "express-flash-messages": "^0.1.1",
+    "express-force-ssl": "^0.3.2",
+    "express-session": "^1.15.6",
+    "express-subdomain": "^1.0.5",
+    "file-system": "^2.2.2",
+    "firebase": "^4.11.0",
+    "firebase-admin": "^5.11.0",
+    "formidable": "^1.1.1",
+    "morgan": "^1.0.1",
+    "node-cron": "^1.2.1",
+    "sendgrid": "^5.2.3",
+    "static-favicon": "~1.0.0",
+    "stripe": "^6.0.0"
+  }
+}
